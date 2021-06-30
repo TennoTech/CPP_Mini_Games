@@ -23,12 +23,16 @@ private:
 	sf::VideoMode videoMode;
 	sf::Event ev;
 
-	sf::Vector2i mousePosition;
+	sf::Vector2i mousePositionWindow;
+	sf::Vector2f mousePositionView;
 
 	int points;
+	int health;
 	float enemySpawnTimer;
 	float enemySpawnTimerMax;
-	int maxEnemies;
+	size_t maxEnemies;
+	bool mouseHeld;
+	bool hasGameEnded;
 
 	std::vector<sf::RectangleShape> enemies;
 	sf::RectangleShape enemy;
@@ -38,6 +42,7 @@ public:
 	virtual ~Game();
 
 	const bool IsWindowOpen() const;
+	const bool GetHasGameEnded() const;
 
 	// Functions
 	void SpawnEnemy();

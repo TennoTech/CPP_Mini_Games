@@ -8,7 +8,7 @@ int main()
 	srand(static_cast<unsigned>(time(NULL)));
 
 	// Game Loop
-	while (game.IsWindowOpen())
+	while (game.IsWindowOpen() && !game.GetHasGameEnded())
 	{
 		// Update
 		game.Update();
