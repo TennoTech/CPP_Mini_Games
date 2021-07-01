@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <sstream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
@@ -26,6 +28,10 @@ private:
 	sf::Vector2i mousePositionWindow;
 	sf::Vector2f mousePositionView;
 
+	// Resources
+	sf::Font font;
+	sf::Text uiText;
+
 	int points;
 	int health;
 	float enemySpawnTimer;
@@ -45,9 +51,11 @@ public:
 	const bool GetHasGameEnded() const;
 
 	// Functions
+	void RenderText(sf::RenderTarget& target);
+	void UpdateText();
 	void SpawnEnemy();
 	void UpdateEnemies();
-	void RenderEnemies();
+	void RenderEnemies(sf::RenderTarget& target);
 	void UpdatePollEvents();
 	void UpdateMousePositions();
 	void Update();

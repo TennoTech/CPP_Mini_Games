@@ -31,6 +31,12 @@ Game::Game()
 {
 	InitWindow();
 	InitEnemy();
+
+	font.loadFromFile("Fonts/Frizon.ttf");
+	uiText.setFont(font);
+	uiText.setCharacterSize(25);
+	uiText.setFillColor(sf::Color::Magenta);
+	uiText.setString("Something");
 }
 
 Game::~Game()
@@ -48,6 +54,19 @@ const bool Game::GetHasGameEnded() const
 	return hasGameEnded;
 }
 
+void Game::RenderText(sf::RenderTarget& target)
+{
+	target.draw(uiText);
+}
+
+void Game::UpdateText()
+{
+	std::stringstream ss;
+	ss << points << " " << health;
+
+	uiText.setString(ss.str());
+}
+
 void Game::SpawnEnemy()
 {
 	// Setting random position
@@ -55,7 +74,36 @@ void Game::SpawnEnemy()
 		static_cast<float>(rand() % static_cast<int>(window->getSize().x - enemy.getSize().x)),
 		0.0f
 	);
-	enemy.setFillColor(sf::Color::Green);
+
+	int type = rand() % 5;
+
+	switch (type)
+	{
+	case 0:
+		enemy.setFillColor(sf::Color::Green);
+		enemy.setSize(sf::Vector2f(25.0f, 25.0f));
+		break;
+	case 1:
+		enemy.setFillColor(sf::Color::Blue);
+		enemy.setSize(sf::Vector2f(50.0f, 50.0f));
+		break;
+	case 2:
+		enemy.setFillColor(sf::Color::Red);
+		enemy.setSize(sf::Vector2f(75.0f, 75.0f));
+		break;
+	case 3:
+		enemy.setFillColor(sf::Color::Yellow);
+		enemy.setSize(sf::Vector2f(100.0f, 100.0f));
+		break;
+	case 4:
+		enemy.setFillColor(sf::Color::White);
+		enemy.setSize(sf::Vector2f(125.0f, 125.0f));
+		break;
+	default:
+		enemy.setFillColor(sf::Color::Magenta);
+		enemy.setSize(sf::Vector2f(150.0f, 150.0f));
+		break;
+	}
 
 	// Spawning enemy
 	enemies.push_back(enemy);
@@ -97,8 +145,8 @@ void Game::UpdateEnemies()
 				mouseHeld = true;
 				if (enemies[i].getGlobalBounds().contains(mousePositionView))
 				{
-					isDeleted = true;
 					points++;
+					isDeleted = true;
 				}
 
 				// Starts at the beginning of the array then goes up to specified index
@@ -113,11 +161,11 @@ void Game::UpdateEnemies()
 	}
 }
 
-void Game::RenderEnemies()
+void Game::RenderEnemies(sf::RenderTarget& target)
 {
 	for (auto& e : enemies)
 	{
-		window->draw(e);
+		target.draw(e);
 	}
 }
 
@@ -154,6 +202,7 @@ void Game::Update()
 	{
 		UpdateMousePositions();
 		UpdateEnemies();
+		UpdateText();
 	}
 
 	if (health <= 0)
@@ -166,7 +215,9 @@ void Game::Render()
 	window->clear();
 
 	// Draw Game
-	RenderEnemies();
+	RenderEnemies(*window);
+
+	RenderText(*window);
 
 	window->display();
 }
